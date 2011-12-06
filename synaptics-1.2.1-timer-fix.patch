@@ -1,0 +1,11 @@
+diff -up xf86-input-synaptics-1.2.1/src/synaptics.c.jx xf86-input-synaptics-1.2.1/src/synaptics.c
+--- xf86-input-synaptics-1.2.1/src/synaptics.c.jx	2009-12-10 22:46:39.000000000 -0500
++++ xf86-input-synaptics-1.2.1/src/synaptics.c	2010-03-11 10:29:52.000000000 -0500
+@@ -615,7 +615,6 @@ SynapticsPreInit(InputDriverPtr drv, IDe
+     xf86ErrorFVerb(6, "port opened successfully\n");
+ 
+     /* initialize variables */
+-    priv->timer = NULL;
+     priv->repeatButtons = 0;
+     priv->nextRepeat = 0;
+     priv->count_packet_finger = 0;

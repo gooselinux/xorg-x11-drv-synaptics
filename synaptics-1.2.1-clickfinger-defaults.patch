@@ -1,0 +1,45 @@
+From 776ec0ed42616769ed834b5822df3b2b0d5c0e85 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Thu, 29 Apr 2010 15:03:55 +1000
+Subject: [PATCH] Disable ClickFinger for touchpads with more than one physical button (#26079)
+
+If a touchpad has more than just one (or no) button, don't enable any
+ClickFinger settings other than button 1.
+
+The old default of enabling those clickfingers can be confusing on devices
+that have left and right buttons but no middle. In that case, leaving three
+fingers on the touchpad and clicking will result in a button 2 press
+(usually paste). But leaving one or two fingers on the touchpad while
+clicking will simply send button 1 events.
+
+This can appear like spurious button 2 events to the user.
+
+X.Org Bug 26079 <http://bugs.freedesktop.org/show_bug.cgi?id=26079>
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/synaptics.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/synaptics.c b/src/synaptics.c
+index 091dbe1..2f432ce 100644
+--- a/src/synaptics.c
++++ b/src/synaptics.c
+@@ -437,11 +437,11 @@ static void set_default_parameters(LocalDevicePtr local)
+     tapButton2 = priv->has_left ? 0 : 3;
+     tapButton3 = priv->has_left ? 0 : 2;
+ 
+-    /* Enable multifinger-click if we don't have right/middle button,
++    /* Enable multifinger-click if only have one physical button,
+        otherwise clickFinger is always button 1. */
+     clickFinger1 = 1;
+-    clickFinger2 = priv->has_right ? 1 : 3;
+-    clickFinger3 = priv->has_middle ? 1 : 2;
++    clickFinger2 = (priv->has_right || priv->has_middle) ? 1 : 3;
++    clickFinger3 = (priv->has_right || priv->has_middle) ? 1 : 2;
+ 
+     /* Enable vert edge scroll if we can't detect doubletap */
+     vertEdgeScroll = priv->has_double ? FALSE : TRUE;
+-- 
+1.6.6.1
+

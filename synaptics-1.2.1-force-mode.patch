@@ -1,0 +1,35 @@
+From 8f83833155ea2402e23103826eaf74943b163427 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Thu, 17 Jun 2010 12:39:13 +1000
+Subject: [PATCH] Don't allow anything but relative mode.
+
+We did this before already anyway, make it official and return an error to
+the client as appropriate. Touchpads in absolute mode are somewhat useless.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Reviewed-by: Fernando Carrijo <fcarrijo@yahoo.com.br>
+(cherry picked from commit 69097acf352464a04ca315c80f7cf855f8656ede)
+
+Conflicts:
+
+	src/synaptics.c
+---
+ src/synaptics.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/synaptics.c b/src/synaptics.c
+index e7a061c..2d8c650 100644
+--- a/src/synaptics.c
++++ b/src/synaptics.c
+@@ -2332,7 +2332,7 @@ static int
+ SwitchMode(ClientPtr client, DeviceIntPtr dev, int mode)
+ {
+     ErrorF("SwitchMode called\n");
+-    return Success;
++    return (mode == Relative) ? Success : XI_BadMode;
+ }
+ 
+ static Bool
+-- 
+1.6.5.2
+
